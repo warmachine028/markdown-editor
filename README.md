@@ -2,7 +2,7 @@
 
 <div align="center">
     <a href="https://github.com/warmachine028/markdown-editor">
-        <img width=200 src="https://github.com/warmachine028/markdown-editor/blob/main/assets/icon.png" alt="markdown-editor">
+        <img width=200 src="https://github.com/warmachine028/markdown-editor/assets/75939390/23fc5184-bce2-4ef2-a5df-254c576353b7" alt="markdown-editor">
     </a>
     <p style="font-family: roboto, calibri; font-size:12pt; font-style:italic"> A modern looking application built with Electron-Vite-React🎉✨</p>
 </div>
@@ -15,7 +15,7 @@ This application solves the need for a lightweight and simple live github markdo
 
 ## Preview
 
-![image](https://github.com/warmachine028/markdown-editor/blob/main/assets/preview.png)
+![image](https://github.com/warmachine028/markdown-editor/assets/75939390/524d9a55-4803-46c6-b0d2-c487d61b7d8e)
 
 ## Requirements
 
@@ -23,9 +23,9 @@ This application solves the need for a lightweight and simple live github markdo
 
 ## How to use
 
-```shell
+```sh
 $ npm run compile
-$ dist/win-unpacked/vite-electron-builder.exe
+$ dist/win-unpacked/markdown-editor.exe
 ```
 
 ## Tech Stack
