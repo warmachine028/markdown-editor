@@ -1,16 +1,22 @@
-import {app, shell} from 'electron';
-import {URL} from 'url';
+import type { Session } from 'electron';
+import { app, shell } from 'electron';
+import { URL } from 'node:url';
 
 /**
  * List of origins that you allow open INSIDE the application and permissions for each of them.
  *
  * In development mode you need allow open `VITE_DEV_SERVER_URL`
  */
-const ALLOWED_ORIGINS_AND_PERMISSIONS = new Map<string, Set<'clipboard-read' | 'media' | 'display-capture' | 'mediaKeySystem' | 'geolocation' | 'notifications' | 'midi' | 'midiSysex' | 'pointerLock' | 'fullscreen' | 'openExternal' | 'unknown'>>(
+type Permission = Parameters<
+  Exclude<Parameters<Session['setPermissionRequestHandler']>[0], null>
+>[1];
+
+const ALLOWED_ORIGINS_AND_PERMISSIONS = new Map<string, Set<Permission>>(
   import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL
-    ? [[new URL(import.meta.env.VITE_DEV_SERVER_URL).origin, new Set]]
+    ? [[new URL(import.meta.env.VITE_DEV_SERVER_URL).origin, new Set()]]
     : [],
 );
+
 
 /**
  * List of origins that you allow open IN BROWSER.
@@ -38,7 +44,7 @@ app.on('web-contents-created', (_, contents) => {
    * @see https://www.electronjs.org/docs/latest/tutorial/security#13-disable-or-limit-navigation
    */
   contents.on('will-navigate', (event, url) => {
-    const {origin} = new URL(url);
+    const { origin } = new URL(url);
     if (ALLOWED_ORIGINS_AND_PERMISSIONS.has(origin)) {
       return;
     }
@@ -59,7 +65,7 @@ app.on('web-contents-created', (_, contents) => {
    * @see https://www.electronjs.org/docs/latest/tutorial/security#5-handle-session-permission-requests-from-remote-content
    */
   contents.session.setPermissionRequestHandler((webContents, permission, callback) => {
-    const {origin} = new URL(webContents.getURL());
+    const { origin } = new URL(webContents.getURL());
 
     const permissionGranted = !!ALLOWED_ORIGINS_AND_PERMISSIONS.get(origin)?.has(permission);
     callback(permissionGranted);
@@ -80,8 +86,8 @@ app.on('web-contents-created', (_, contents) => {
    * @see https://www.electronjs.org/docs/latest/tutorial/security#14-disable-or-limit-creation-of-new-windows
    * @see https://www.electronjs.org/docs/latest/tutorial/security#15-do-not-use-openexternal-with-untrusted-content
    */
-  contents.setWindowOpenHandler(({url}) => {
-    const {origin} = new URL(url);
+  contents.setWindowOpenHandler(({ url }) => {
+    const { origin } = new URL(url);
 
     // @ts-expect-error Type checking is performed in runtime
     if (ALLOWED_EXTERNAL_ORIGINS.has(origin)) {
@@ -93,7 +99,7 @@ app.on('web-contents-created', (_, contents) => {
     }
 
     // Prevent creating new window in application
-    return {action: 'deny'};
+    return { action: 'deny' };
   });
 
 
@@ -105,7 +111,7 @@ app.on('web-contents-created', (_, contents) => {
    * @see https://www.electronjs.org/docs/latest/tutorial/security#12-verify-webview-options-before-creation
    */
   contents.on('will-attach-webview', (event, webPreferences, params) => {
-    const {origin} = new URL(params.src);
+    const { origin } = new URL(params.src);
     if (!ALLOWED_ORIGINS_AND_PERMISSIONS.has(origin)) {
 
       if (import.meta.env.DEV) {

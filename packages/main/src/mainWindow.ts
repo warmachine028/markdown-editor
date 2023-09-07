@@ -1,6 +1,6 @@
-import {BrowserWindow} from 'electron';
-import {join} from 'path';
-import {URL} from 'url';
+import { BrowserWindow } from 'electron';
+import { join } from 'path';
+import { URL } from 'url';
 
 async function createWindow() {
   const browserWindow = new BrowserWindow({
@@ -8,9 +8,11 @@ async function createWindow() {
     vibrancy: 'under-window',
     visualEffectState: 'active',
     webPreferences: {
-      nativeWindowOpen: true,
-      webviewTag: false, // The webview tag is not recommended. Consider alternatives like iframe or Electron's BrowserView. https://www.electronjs.org/docs/latest/api/webview-tag#warning
-      preload: join(__dirname, '../../preload/dist/index.cjs'),
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: false, // Sandbox disabled because the demo of preload script depend on the Node.js api
+      webviewTag: false, // The webview tag is not recommended. Consider alternatives like an iframe or Electron's BrowserView. @see https://www.electronjs.org/docs/latest/api/webview-tag#warning
+      preload: join(__dirname, 'packages/preload/dist/index.cjs'),
     },
   });
 
