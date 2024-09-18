@@ -61,7 +61,7 @@
     "@codemirror/state": "^0.19.6",
     "@codemirror/theme-one-dark": "^0.19.1",
     "assert": "^2.0.0",
-    "electron-updater": "4.6.5",
+    "electron-updater": "6.3.0",
     "github-markdown-css": "^5.1.0",
     "process": "^0.11.10",
     "react": "^17.0.2",
